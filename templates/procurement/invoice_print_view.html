@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Sheets Details Reference: {{ invoice.purchase_order.po_number }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/invoice_print.css' %}">
+</head>
+<body>
+
+    <div class="no-print-interface" style="background: #333; padding: 1rem; text-align: center; margin-bottom: 2rem; border-radius: 4px;">
+        <button onclick="window.print()" style="padding: 0.5rem 1.5rem; background: #00796b; color: white; border: none; font-weight: bold; border-radius: 3px; cursor: pointer;">Execute Print Page / Save as Local PDF</button>
+        <a href="{% url 'document_center' %}" style="color: #bbb; text-decoration: none; margin-left: 1.5rem; font-size: 0.9rem;">Exit Viewport Profile</a>
+    </div>
+
+    <div class="invoice-billing-sheet">
+        <div class="invoice-header-grid">
+            <div>
+                <h1 style="margin: 0; color: #004d40; letter-spacing: 1px;">COMMERCIAL INVOICE</h1>
+                <small style="color: #555;">VendorBridge Centralized Procurement Ecosystem</small>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="margin: 0 0 0.25rem 0;">Invoice ID: INV-{{ invoice.purchase_order.po_number }}</h3>
+                <span style="font-size: 0.9rem; color: #666;">Generated Timestamp Date: {{ invoice.generated_at|date:"Y-m-d H:i" }}</span>
+            </div>
+        </div>
+
+        <div class="parties-distribution-layout">
+            <div>
+                <h4 style="margin: 0 0 0.5rem 0; color: #004d40; border-bottom: 1px solid #ccc; padding-bottom: 0.25rem;">ISSUED BY VENDOR (Supplier)</h4>
+                <strong>{{ invoice.purchase_order.quotation.vendor.company_name }}</strong><br>
+                Address: {{ invoice.purchase_order.quotation.vendor.address }}<br>
+                GST Identification Code: <code>{{ invoice.purchase_order.quotation.vendor.gst_number }}</code><br>
+                Phone: {{ invoice.purchase_order.quotation.vendor.contact_phone }}
+            </div>
+            <div>
+                <h4 style="margin: 0 0 0.5rem 0; color: #004d40; border-bottom: 1px solid #ccc; padding-bottom: 0.25rem;">DELIVER TO / INVOICE OBJECTIVE (Buyer)</h4>
+                <strong>VendorBridge Centralized Operations Hub</strong><br>
+                Authorized Officer: {{ invoice.purchase_order.created_by.username }}<br>
+                Linked Base Purchase Reference: <code>{{ invoice.purchase_order.po_number }}</code>
+            </div>
+        </div>
+
+        <table class="financial-math-table">
+            <thead>
+                <tr>
+                    <th>Line Scope / Item Summary Description</th>
+                    <th style="text-align: right;">Volume Units Ordered</th>
+                    <th style="text-align: right;">Unit Bid Rate</th>
+                    <th style="text-align: right;">Net Subtotal Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>{{ invoice.purchase_order.quotation.rfq.title }}</strong>
+                        <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #666;">Specifications: {{ invoice.purchase_order.quotation.rfq.product_details }}</p>
+                    </td>
+                    <td style="text-align: right;">{{ invoice.purchase_order.quotation.rfq.quantity }}</td>
+                    <td style="text-align: right;">${{ invoice.purchase_order.quotation.price_per_unit }}</td>
+                    <td style="text-align: right;">${{ invoice.subtotal }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="overflow: hidden;">
+            <div class="totals-alignment-block">
+                <div class="totals-row">
+                    <span>Gross Subtotal:</span>
+                    <span>${{ invoice.subtotal }}</span>
+                </div>
+                <div class="totals-row">
+                    <span>Standard Corporate GST (18%):</span>
+                    <span>${{ invoice.tax_amount }}</span>
+                </div>
+                <div class="totals-row" style="border-top: 2px solid #333; font-weight: bold; font-size: 1.1rem; color: #004d40;">
+                    <span>Grand Aggregated Total:</span>
+                    <span>${{ invoice.total_amount }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 5rem; border-top: 1px dashed #ccc; padding-top: 1rem; text-align: center; font-size: 0.8rem; color: #777;">
+            This is an electronically generated document. No handwritten signature is required for baseline settlement processing.
+        </div>
+    </div>
+
+</body>
+</html>

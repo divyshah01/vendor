@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Procurement Proposal - VendorBridge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rfq.css' %}">
+</head>
+<body style="height: auto; padding: 3rem 0; background-color: #f4f6f9;">
+
+<div class="form-container-large">
+    <div class="auth-header">
+        <h2 style="color: #004d40;">Submit Commercial Quotation Proposal</h2>
+        <p>Responding to Request for Quotation: <strong>#{{ rfq.id }} - {{ rfq.title }}</strong></p>
+    </div>
+
+    <div class="specification-review-box">
+        <h4 style="margin: 0 0 0.5rem 0; color: #33691e;">Review Target Technical Demands & Parameters:</h4>
+        <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">{{ rfq.product_details }}</p>
+        <strong style="font-size: 0.85rem;">Target Requested Volume Units: <span id="target_quantity">{{ rfq.quantity }}</span></strong>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; background: #ffebee; color: #c62828;">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'submit_quotation' rfq.id %}">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="price_per_unit">Price Per Unit (INR/USD)</label>
+                <input type="number" step="0.01" id="price_per_unit" name="price_per_unit" 
+                       value="{% if quotation %}{{ quotation.price_per_unit }}{% endif %}" required oninput="calculateTotalEstimate()">
+            </div>
+            
+            <div class="form-group">
+                <label for="delivery_timeline">Estimated Delivery Window (Days)</label>
+                <input type="number" id="delivery_timeline" name="delivery_timeline" 
+                       value="{% if quotation %}{{ quotation.delivery_timeline_days }}{% endif %}" required placeholder="e.g., 14">
+            </div>
+        </div>
+
+        <div class="inline-calculator">
+            <strong>Estimated Gross Compound Total Valuation:</strong> 
+            <span style="float: right; font-weight: bold;" id="gross_total_indicator">0.00</span>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Operational Explanatory Notes / Service Warranties</label>
+            <textarea id="notes" name="notes" rows="4" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:0.5rem;" 
+                      placeholder="Specify shipping terms, exceptions, or structural support criteria details...">{% if quotation %}{{ quotation.notes }}{% endif %}</textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn-auth" style="flex: 2;">
+                {% if quotation %}Commit Proposal Modifications{% else %}Dispatch Official Proposal Bid{% endif %}
+            </button>
+            <a href="{% url 'rfq_list' %}" class="btn-auth" style="flex: 1; background: #78909c; text-align: center; text-decoration: none; line-height: 2.2rem;">Back</a>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function calculateTotalEstimate() {
+        const rate = parseFloat(document.getElementById('price_per_unit').value) || 0;
+        const volume = parseInt(document.getElementById('target_quantity').innerText) || 0;
+        const grossValue = rate * volume;
+        document.getElementById('gross_total_indicator').innerText = grossValue.toFixed(2);
+    }
+    // Execution invocation block to update elements on form load
+    window.onload = calculateTotalEstimate;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* static/css/logs.css */
+:root {
+    --primary-teal: #004d40;
+    --gray-muted: #64748b;
+    --border-slate: #e2e8f0;
+}
+
+.timeline-canvas {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-top: 1.5rem;
+}
+
+.log-stream-wrapper {
+    position: relative;
+    padding-left: 2rem;
+    border-left: 2px solid var(--border-slate);
+}
+
+.log-item-row {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed var(--border-slate);
+}
+
+.log-item-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Node indicator markers */
+.log-node-dot {
+    position: absolute;
+    left: -2.45rem;
+    top: 0.25rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #0288d1;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 2px #0288d1;
+}
+
+.log-timestamp {
+    font-size: 0.8rem;
+    color: var(--gray-muted);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.log-message-body {
+    font-size: 0.95rem;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+.log-message-body em {
+    color: var(--primary-teal);
+    font-weight: bold;
+    font-style: normal;
+}

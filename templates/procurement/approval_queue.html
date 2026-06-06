@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approval Routing Desk - VendorBridge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/comparison.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>VendorBridge ERP</h3>
+        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
+        <hr style="border-color: #37474f;">
+        <a href="{% url 'dashboard' %}">Dashboard Workspace</a>
+        <a href="{% url 'rfq_list' %}">RFQs Tracking Desk</a>
+        <a href="{% url 'approval_queue' %}" class="active">Approval Workflows</a>
+        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Procurement Verification & Approval Queue</h2>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; background: #e0f2f1; color: #004d40;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% for wf in workflows %}
+        <div class="workflow-panel">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #edf2f7; padding-bottom: 0.75rem;">
+                <div>
+                    <h4 style="margin: 0; color: #004d40;">Workflow Stream ID: #WF-{{ wf.id }}</h4>
+                    <small style="color: #64748b;">Target Document: <strong>{{ wf.quotation.rfq.title }}</strong> submitted by <strong>{{ wf.quotation.vendor.company_name }}</strong></small>
+                </div>
+                <span class="badge {% if wf.status == 'PENDING' %}pending{% elif wf.status == 'APPROVED' %}active{% else %}inactive{% endif %}">
+                    {{ wf.get_status_display }}
+                </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; font-size: 0.9rem; color: #334155;">
+                <div><strong>Quoted Net Value:</strong> ${{ wf.quotation.total_price }}</div>
+                <div><strong>Delivery Lead Windows:</strong> {{ wf.quotation.delivery_timeline_days }} Days</div>
+                <div><strong>Assigned Approver:</strong> {{ wf.approver.username|default:"Unassigned (Broadcast)" }}</div>
+            </div>
+
+            <div class="timeline-tracker">
+                <div class="timeline-checkpoint">
+                    <strong>Workflow Initialized Status:</strong> Proposed commercial bid transferred to review layout space.
+                </div>
+                {% if wf.status != 'PENDING' %}
+                <div class="timeline-checkpoint">
+                    <strong>Transition Finalized:</strong> Reviewed by Executive User: <em>{{ wf.approver.username }}</em>.<br>
+                    <strong>Manager Comments:</strong> "{{ wf.remarks|default:"No notes left." }}"
+                </div>
+                {% endif %}
+            </div>
+
+            {% if wf.status == 'PENDING' and request.user.role == 'MANAGER' or request.user.role == 'ADMIN' %}
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                <form method="POST" action="{% url 'execute_approval' wf.id %}">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 0.75rem;">
+                        <label for="remarks_{{ wf.id }}" style="display:block; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">Verification Decision Remarks / Notes</label>
+                        <input type="text" id="remarks_{{ wf.id }}" name="remarks" placeholder="Provide grounds for processing action decision context..." style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px;" required>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="submit" name="action" value="APPROVED" class="btn" style="background-color: #16a34a; font-size: 0.85rem; padding: 0.5rem 1rem;">Confirm Executive Approval</button>
+                        <button type="submit" name="action" value="REJECTED" class="btn" style="background-color: #dc2626; font-size: 0.85rem; padding: 0.5rem 1rem;">Reject Proposal</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 3rem; background: #ffffff; color: #94a3b8; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            No procurement approval workflows are active in the system architecture index.
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

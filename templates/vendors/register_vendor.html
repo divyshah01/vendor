@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Vendor Account</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body style="height: auto; padding: 3rem 0;">
+
+<div class="auth-container" style="max-width: 500px;">
+    <div class="auth-header">
+        <h2>Vendor Master Registry</h2>
+        <p>Introduce a new verified processing vendor into the system index.</p>
+    </div>
+
+    <form method="POST" action="{% url 'register_vendor' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="company_name">Company Corporate Entity Name</label>
+            <input type="text" id="company_name" name="company_name" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Procurement Scope / Category Tag</label>
+            <input type="text" id="category" name="category" placeholder="e.g. IT Equipment, Logistics, Office Supplies" required>
+        </div>
+        <div class="form-group">
+            <label for="gst_number">GST Registration Number Reference</label>
+            <input type="text" id="gst_number" name="gst_number" maxlength="15" required>
+        </div>
+        <div class="form-group">
+            <label for="contact_email">Corporate Contact Email</label>
+            <input type="email" id="contact_email" name="contact_email" required>
+        </div>
+        <div class="form-group">
+            <label for="contact_phone">Operational Phone Line</label>
+            <input type="text" id="contact_phone" name="contact_phone" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Corporate Office / Factory Address Data</label>
+            <textarea id="address" name="address" rows="3" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:0.5rem;" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn-auth">Commit Vendor to Records</button>
+    </form>
+    <div class="auth-footer">
+        <a href="{% url 'vendor_list' %}">Cancel & Return to Directory Index</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RFQs Tracking Desk - VendorBridge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rfq.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>VendorBridge ERP</h3>
+        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
+        <hr style="border-color: #37474f;">
+        <a href="{% url 'dashboard' %}">Dashboard Workspace</a>
+        <a href="{% url 'rfq_list' %}" class="active">RFQs Tracking Desk</a>
+        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Requests for Quotations (RFQs) Pipeline</h2>
+            {% if request.user.role == 'ADMIN' or request.user.role == 'PROCUREMENT_OFFICER' %}
+                <a href="{% url 'create_rfq' %}" class="btn" style="background-color: var(--primary-color);">+ Initialize New RFQ</a>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; background: #e0f2f1; color: #004d40;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="rfq-grid">
+            {% for rfq in rfqs %}
+            <div class="rfq-card">
+                <div>
+                    <div class="rfq-meta">RFQ ID Reference: #{{ rfq.id }} | Dispatched: {{ rfq.created_at|date:"M d, Y" }}</div>
+                    <h3 style="margin: 0 0 0.75rem 0; color: var(--primary-color);">{{ rfq.title }}</h3>
+                    <p style="font-size: 0.9rem; color: #455a64;">{{ rfq.description|truncatewords:25 }}</p>
+                    
+                    <div style="margin: 1rem 0; font-size: 0.85rem; line-height: 1.4;">
+                        <strong>Product Specs:</strong> {{ rfq.product_details }}<br>
+                        <strong>Target Quantity Units:</strong> {{ rfq.quantity }}<br>
+                        <strong>Response Deadline:</strong> <span style="color: #c62828; font-weight: bold;">{{ rfq.deadline|date:"Y-m-d H:i" }}</span>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #edf2f7; padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span class="badge" style="background-color: #e0f7fa; color: #006064;">{{ rfq.get_status_display }}</span>
+                    {% if request.user.role == 'VENDOR' %}
+                        <a href="#" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Submit Proposal Bid</a>
+                    {% else %}
+                        <small style="color: #78909c;">{{ rfq.assigned_vendors.count }} Vendor(s) In Loop</small>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; color: #78909c; border-radius: 6px;">
+                No active or accessible procurement request documentation arrays found.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

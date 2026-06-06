@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Initialize Procurement Request Form</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/rfq.css' %}">
+</head>
+<body style="height: auto; padding: 2rem 0; background-color: #f4f6f9;">
+
+<div class="form-container-large">
+    <div class="auth-header">
+        <h2 style="color: #004d40;">Construct Procurement RFQ</h2>
+        <p>Distribute specification guidelines directly to targeted system vendor lists.</p>
+    </div>
+
+    <form method="POST" action="{% url 'create_rfq' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">RFQ Descriptive Summary Title</label>
+            <input type="text" id="title" name="title" required placeholder="e.g., Supply of 50 Standard Operational Thinkpad Laptops">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Context / Scope of Work Overview</label>
+            <textarea id="description" name="description" rows="3" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:0.5rem;" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="product_details">Detailed Technical Specifications & Part Metrics</label>
+            <textarea id="product_details" name="product_details" rows="3" style="width:100%; border:1px solid #ccc; border-radius:4px; padding:0.5rem;" placeholder="Memory, Processor configurations, warranty rules..." required></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="quantity">Target Allocation Units Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="deadline">Bid Closure Window Timestamp Deadline</label>
+                <input type="datetime-local" id="deadline" name="deadline" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="attachments">Upload Schematic/Requirement Documentation Attachment (PDF/Doc)</label>
+            <input type="file" id="attachments" name="attachments" style="border: none; padding: 0;">
+        </div>
+
+        <div class="form-group">
+            <label>Assign Qualified System Vendors for Dispatch Integration</label>
+            <div class="checkbox-group">
+                {% for vendor in vendors %}
+                <div class="checkbox-item">
+                    <input type="checkbox" name="vendors" value="{{ vendor.id }}" id="vendor_{{ vendor.id }}">
+                    <label for="vendor_{{ vendor.id }}" style="font-weight: normal; margin: 0;">
+                        {{ vendor.company_name }} <span style="color: #78909c; font-size: 0.8rem;">({{ vendor.category }})</span>
+                    </label>
+                </div>
+                {% empty %}
+                <p style="font-size: 0.85rem; color: #c62828; margin: 0;">No active verified vendors established in database indexes.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn-auth" style="flex: 2;">Commit & Dispatched RFQ Stream</button>
+            <a href="{% url 'rfq_list' %}" class="btn-auth" style="flex: 1; background: #78909c; text-align: center; text-decoration: none; line-height: 2.2rem;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

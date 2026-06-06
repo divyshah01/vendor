@@ -1,0 +1,95 @@
+/* static/css/comparison.css */
+:root {
+    --primary: #004d40;
+    --highlight-green: #e8f5e9;
+    --text-success: #2e7d32;
+    --border-color: #cfd8dc;
+}
+
+.comparison-workspace {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-top: 1.5rem;
+}
+
+/* Flexbox Matrix Row Layout */
+.comparison-grid-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.comparison-column {
+    flex: 0 0 280px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: #fafafa;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Best Deal/Lowest Price UI Highlighting Class */
+.comparison-column.lowest-cost-deal {
+    border-color: var(--text-success);
+    background-color: var(--highlight-green);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+}
+
+.column-header {
+    background: #eeeeee;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: bold;
+}
+
+.lowest-cost-deal .column-header {
+    background: #c8e6c9;
+    color: var(--text-success);
+}
+
+.data-metric-cell {
+    padding: 1rem;
+    border-bottom: 1px solid #eceff1;
+    font-size: 0.95rem;
+}
+
+.data-metric-cell strong {
+    display: block;
+    font-size: 0.75rem;
+    color: #78909c;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+/* Append to static/css/comparison.css */
+.workflow-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.timeline-tracker {
+    border-left: 3px solid #004d40;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+    position: relative;
+}
+
+.timeline-checkpoint {
+    margin-bottom: 1rem;
+}
+
+.timeline-checkpoint::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #00796b;
+    border-radius: 50%;
+    position: absolute;
+    left: -23px;
+    top: 4px;
+}

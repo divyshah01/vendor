@@ -1,0 +1,71 @@
+/* static/css/rfq.css */
+:root {
+    --primary-color: #004d40;
+    --border-subtle: #cfd8dc;
+}
+
+.rfq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.rfq-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rfq-meta {
+    font-size: 0.85rem;
+    color: #607d8b;
+    margin-bottom: 0.5rem;
+}
+
+.form-container-large {
+    background: #ffffff;
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.checkbox-group {
+    max-height: 160px;
+    overflow-y: auto;
+    border: 1px solid var(--border-subtle);
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: #fafafa;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+/* Append this segment to your existing static/css/rfq.css file layout */
+.inline-calculator {
+    background-color: #efebe9;
+    border-left: 4px solid #5d4037;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.specification-review-box {
+    background-color: #f1f8e9;
+    border: 1px dashed #7cb342;
+    padding: 1.25rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}

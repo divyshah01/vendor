@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor Directory - VendorBridge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>VendorBridge ERP</h3>
+        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
+        <hr style="border-color: #37474f;">
+        <a href="{% url 'dashboard' %}">Dashboard Workspace</a>
+        <a href="{% url 'vendor_list' %}" class="active">Vendor Directory</a>
+        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Vendor Management Directory Master Index</h2>
+            {% if request.user.role == 'ADMIN' or request.user.role == 'PROCUREMENT_OFFICER' %}
+                <a href="{% url 'register_vendor' %}" class="btn" style="background-color: var(--primary);">+ Register New Vendor</a>
+            {% endif %}
+        </div>
+
+        <div class="filter-bar">
+            <form method="GET" action="{% url 'vendor_list' %}" class="filter-form">
+                <div class="form-field">
+                    <label for="search">Keyword Search</label>
+                    <input type="text" id="search" name="search" placeholder="Company, GST, or tag..." value="{{ search_query }}">
+                </div>
+                <div class="form-field">
+                    <label for="category">Category Segment</label>
+                    <select id="category" name="category">
+                        <option value="">-- All Categories --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="status">Operational Status</label>
+                    <select id="status" name="status">
+                        <option value="">-- All Statuses --</option>
+                        <option value="ACTIVE" {% if selected_status == 'ACTIVE' %}selected{% endif %}>Active</option>
+                        <option value="PENDING" {% if selected_status == 'PENDING' %}selected{% endif %}>Pending Approval</option>
+                        <option value="INACTIVE" {% if selected_status == 'INACTIVE' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Apply Filters</button>
+                <a href="{% url 'vendor_list' %}" style="padding: 0.5rem; text-decoration: none; color: #777;">Clear</a>
+            </form>
+        </div>
+
+        <div class="data-table-container">
+            <table class="vendor-table">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Category</th>
+                        <th>GST Identification</th>
+                        <th>Contact Email</th>
+                        <th>Contact Phone</th>
+                        <th>Performance Rating</th>
+                        <th>Status Badge</th>
+                        {% if request.user.role == 'ADMIN' or request.user.role == 'MANAGER' %}
+                        <th>Administrative Action</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vendor in vendors %}
+                    <tr>
+                        <td><strong>{{ vendor.company_name }}</strong></td>
+                        <td>{{ vendor.category }}</td>
+                        <td><code>{{ vendor.gst_number }}</code></td>
+                        <td>{{ vendor.contact_email }}</td>
+                        <td>{{ vendor.contact_phone }}</td>
+                        <td>⭐ {{ vendor.rating }} / 5.0</td>
+                        <td>
+                            <span class="badge {{ vendor.status|lower }}">{{ vendor.get_status_display }}</span>
+                        </td>
+                        {% if request.user.role == 'ADMIN' or request.user.role == 'MANAGER' %}
+                        <td>
+                            <form method="POST" action="{% url 'update_vendor_status' vendor.id %}" style="display: inline-block;">
+                                {% csrf_token %}
+                                <select name="status" onchange="this.form.submit()" class="action-select">
+                                    <option value="">Change Status...</option>
+                                    <option value="ACTIVE">Set Active</option>
+                                    <option value="PENDING">Set Pending</option>
+                                    <option value="INACTIVE">Set Inactive</option>
+                                </select>
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: #777;">No tracked vendor profiles discovered matching parameters.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

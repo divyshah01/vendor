@@ -1,0 +1,49 @@
+/* static/css/analytics.css */
+:root {
+    --primary-teal: #004d40;
+    --navy-blue: #1e293b;
+    --border-slate: #cbd5e1;
+}
+
+.analytics-matrix-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.report-card-container {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* Simulated graphical bars formatting using native CSS arrays layout framework */
+.trend-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.trend-bar-label {
+    width: 80px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.trend-bar-track {
+    flex-grow: 1;
+    background: #f1f5f9;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.trend-bar-fill {
+    background: var(--primary-teal);
+    height: 100%;
+    border-radius: 10px;
+}

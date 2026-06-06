@@ -1,0 +1,121 @@
+/* static/css/dashboard.css */
+:root {
+    --primary-color: #004d40;
+    --secondary-color: #00796b;
+    --sidebar-bg: #263238;
+    --bg-light: #f8f9fa;
+    --text-dark: #212529;
+    --accent-warn: #ffc107;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    background-color: var(--bg-light);
+    display: flex;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    color: #fff;
+    min-height: 100vh;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #37474f;
+    color: var(--accent-warn);
+}
+
+.sidebar a {
+    display: block;
+    color: #b0bec5;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Main Workspace layout */
+.main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Grid Matrix for Cards */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--primary-color);
+}
+
+.card.warn { border-left-color: var(--accent-warn); }
+
+.card h4 {
+    margin: 0;
+    color: #757575;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.card .metric {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+    color: var(--text-dark);
+}
+
+/* Quick Actions Configuration */
+.action-box {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.btn-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    background-color: var(--secondary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.btn:hover { background-color: var(--primary-color); }

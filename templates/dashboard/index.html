@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VendorBridge - Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>VendorBridge ERP</h3>
+        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
+        <hr style="border-color: #37474f;">
+        <a href="{% url 'dashboard' %}" class="active">Dashboard Workspace</a>
+        
+        {% if role == 'ADMIN' or role == 'PROCUREMENT_OFFICER' %}
+            <a href="#">Vendor Verification Directory</a>
+            <a href="#">Manage RFQ Templates</a>
+        {% endif %}
+        
+        {% if role == 'VENDOR' %}
+            <a href="#">My Submitted Proposals</a>
+        {% endif %}
+        
+        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Terminate Session (Logout)</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>System Control Panel Overview</h2>
+            <div>Active Profile Session: <strong>{{ request.user.username }}</strong></div>
+        </div>
+
+        <div class="analytics-grid">
+            <div class="card">
+                <h4>Active Open RFQs</h4>
+                <div class="metric">{{ active_rfqs_count }}</div>
+            </div>
+            <div class="card warn">
+                <h4>Pending Action Approvals</h4>
+                <div class="metric">{{ pending_approvals_count }}</div>
+            </div>
+            <div class="card">
+                <h4>Tracked Purchase Orders</h4>
+                <div class="metric">{% if recent_pos %}{{ recent_pos|length }}{% else %}0{% endif %}</div>
+            </div>
+            <div class="card">
+                <h4>Invoices Monitored</h4>
+                <div class="metric">{% if recent_invoices %}{{ recent_invoices|length }}{% else %}0{% endif %}</div>
+            </div>
+        </div>
+
+        <div class="action-box">
+            <h3>Quick Action Workflows</h3>
+            <div class="btn-group">
+                {% if role == 'PROCUREMENT_OFFICER' or role == 'ADMIN' %}
+                    <a href="#" class="btn">Create New RFQ Form</a>
+                    <a href="#" class="btn">Register External Vendor</a>
+                {% elif role == 'VENDOR' %}
+                    <a href="#" class="btn">Browse Open Invitations</a>
+                {% elif role == 'MANAGER' %}
+                    <a href="#" class="btn">View Approvals Waiting Queue</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

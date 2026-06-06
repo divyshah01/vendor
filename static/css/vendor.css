@@ -1,0 +1,87 @@
+/* static/css/vendors.css */
+:root {
+    --primary: #004d40;
+    --secondary: #00796b;
+    --success: #2e7d32;
+    --warning: #ef6c00;
+    --danger: #c62828;
+    --light-gray: #f9f9f9;
+}
+
+/* Operational workspace components */
+.filter-bar {
+    background: #fff;
+    padding: 1.25rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.filter-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-field input, .form-field select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 180px;
+}
+
+/* Master Data Grid Table UI */
+.data-table-container {
+    background: #fff;
+    border-radius: 6px;
+    overflow-x: auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.vendor-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.vendor-table th, .vendor-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.vendor-table th {
+    background-color: #f1f5f7;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Dynamic Badge Statuses */
+.badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.badge.active { background-color: #e8f5e9; color: var(--success); }
+.badge.pending { background-color: #fff3e0; color: var(--warning); }
+.badge.inactive { background-color: #ffebee; color: var(--danger); }
+
+.action-select {
+    padding: 0.3rem;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}

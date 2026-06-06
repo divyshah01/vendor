@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compare Proposals - VendorBridge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/comparison.css' %}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>VendorBridge ERP</h3>
+        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
+        <hr style="border-color: #37474f;">
+        <a href="{% url 'dashboard' %}">Dashboard Workspace</a>
+        <a href="{% url 'rfq_list' %}">RFQs Tracking Desk</a>
+        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <div>
+                <h2 style="margin: 0;">Quotation Analytical Evaluation Deck</h2>
+                <span style="color: #546e7a;">Cross-Examining Bids for: <strong>{{ rfq.title }}</strong> (Volume: {{ rfq.quantity }} Units)</span>
+            </div>
+            
+            <div style="background: #fff; padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--border-color);">
+    <span style="font-size: 0.85rem; font-weight: bold; color: #555;">Sort Analytics:</span>
+    
+    <a href="?sort=price" class="btn {% if current_sort == 'price' %}btn-active{% else %}btn-inactive{% endif %}">
+        Lowest Price
+    </a>
+    
+    <a href="?sort=timeline" class="btn {% if current_sort == 'timeline' %}btn-active{% else %}btn-inactive{% endif %}">
+        Fastest Delivery
+    </a>
+    
+    <a href="?sort=rating" class="btn {% if current_sort == 'rating' %}btn-active{% else %}btn-inactive{% endif %}">
+        Vendor Trust Rating
+    </a>
+</div>
+        </div>
+
+        <div class="comparison-workspace">
+            <div class="comparison-grid-container">
+                
+                {% for quote in quotations %}
+                <div class="comparison-column {% if quote.total_price == lowest_price %}lowest-cost-deal{% endif %}">
+                    <div class="column-header">
+                        {{ quote.vendor.company_name }}
+                        {% if quote.total_price == lowest_price %}
+                            <div style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #1b5e20;">[★ Lowest Price Deal]</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="data-metric-cell">
+                        <strong>Vendor Metric Rating</strong>
+                         {{ quote.vendor.rating }} / 5.0
+                    </div>
+
+                    <div class="data-metric-cell">
+                        <strong>Quoted Rate Per Unit</strong>
+                        ${{ quote.price_per_unit }}
+                    </div>
+
+                    <div class="data-metric-cell" style="font-weight: bold;">
+                        <strong>Gross Total Valuation Bid</strong>
+                        ${{ quote.total_price }}
+                    </div>
+
+                    <div class="data-metric-cell">
+                        <strong>Delivery Lead Timeline</strong>
+                        ⏱ {{ quote.delivery_timeline_days }} Business Days
+                    </div>
+
+                    <div class="data-metric-cell" style="min-height: 80px; font-size: 0.85rem; color: #546e7a;">
+                        <strong>Vendor Remarks / Provisions</strong>
+                        {{ quote.notes|default:"No secondary provisions declared."|truncatewords:15 }}
+                    </div>
+
+                    <div class="data-metric-cell" style="text-align: center; background: #fafafa;">
+                        {% if request.user.role == 'PROCUREMENT_OFFICER' or request.user.role == 'ADMIN' %}
+                            <form method="POST" action="#">
+                                {% csrf_token %}
+                                <input type="hidden" name="quotation_id" value="{{ quote.id }}">
+                                <button type="submit" class="btn" style="width: 100%; font-size: 0.85rem; background-color: #2e7d32;">Initialize Approval Workflow</button>
+                            </form>
+                        {% else %}
+                            <span style="font-size: 0.8rem; color: #90a4ae;">Awaiting Officer Route Execution</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div style="width: 100%; text-align: center; padding: 3rem; color: #78909c;">
+                    No active vendor commercial quotation submissions are currently registered to undergo comparison profiles.
+                </div>
+                {% endfor %}
+                <form method="POST" action="{% url 'initiate_approval' %}">
+    {% csrf_token %}
+    <input type="hidden" name="quotation_id" value="{{ quote.id }}">
+    <button type="submit" class="btn" style="width: 100%; font-size: 0.85rem; background-color: #2e7d32;">Initialize Approval Workflow</button>
+</form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
