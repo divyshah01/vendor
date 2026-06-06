@@ -8,25 +8,36 @@
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-
+    
     <div class="sidebar">
-        <h3>VendorBridge ERP</h3>
-        <p style="font-size: 0.85rem; color: #819ca9;">Role: {{ request.user.get_role_display }}</p>
-        <hr style="border-color: #37474f;">
-        <a href="{% url 'dashboard' %}" class="active">Dashboard Workspace</a>
-        
-        {% if role == 'ADMIN' or role == 'PROCUREMENT_OFFICER' %}
-            <a href="#">Vendor Verification Directory</a>
-            <a href="#">Manage RFQ Templates</a>
-        {% endif %}
-        
-        {% if role == 'VENDOR' %}
-            <a href="#">My Submitted Proposals</a>
-        {% endif %}
-        
-        <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Terminate Session (Logout)</a>
-    </div>
-
+    <h3>VendorBridge ERP</h3>
+    <p>Role: {{ request.user.get_role_display }}</p>
+    <hr style="border-color: #37474f;">
+    
+    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard Workspace</a>
+    
+    {% if request.user.role in 'ADMIN PROCUREMENT_OFFICER MANAGER' %}
+        <a href="{% url 'vendor_list' %}" class="{% if request.resolver_match.url_name == 'vendor_list' %}active{% endif %}">Vendor Directory</a>
+    {% endif %}
+    
+    <a href="{% url 'rfq_list' %}" class="{% if request.resolver_match.url_name == 'rfq_list' %}active{% endif %}">RFQs Tracking Desk</a>
+    
+    {% if request.user.role in 'ADMIN MANAGER' %}
+        <a href="{% url 'approval_queue' %}" class="{% if request.resolver_match.url_name == 'approval_queue' %}active{% endif %}">Approval Workflows</a>
+    {% endif %}
+    
+    {% if request.user.role in 'ADMIN PROCUREMENT_OFFICER' %}
+        <a href="{% url 'document_center' %}" class="{% if request.resolver_match.url_name == 'document_center' %}active{% endif %}">Document Factory</a>
+    {% endif %}
+    
+    <a href="{% url 'activity_logs' %}" class="{% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">Activity Audit Logs</a>
+    
+    {% if request.user.role in 'ADMIN MANAGER' %}
+        <a href="{% url 'analytics_dashboard' %}" class="{% if request.resolver_match.url_name == 'analytics_dashboard' %}active{% endif %}">Management Analytics</a>
+    {% endif %}
+    
+    <a href="{% url 'logout' %}" style="margin-top: 3rem; color: #ff8a80;">Logout</a>
+</div>
     <div class="main-content">
         <div class="top-bar">
             <h2>System Control Panel Overview</h2>
@@ -53,17 +64,18 @@
         </div>
 
         <div class="action-box">
-            <h3>Quick Action Workflows</h3>
-            <div class="btn-group">
-                {% if role == 'PROCUREMENT_OFFICER' or role == 'ADMIN' %}
-                    <a href="#" class="btn">Create New RFQ Form</a>
-                    <a href="#" class="btn">Register External Vendor</a>
-                {% elif role == 'VENDOR' %}
-                    <a href="#" class="btn">Browse Open Invitations</a>
-                {% elif role == 'MANAGER' %}
-                    <a href="#" class="btn">View Approvals Waiting Queue</a>
-                {% endif %}
-            </div>
+    <h3>Quick Action Workflows</h3>
+    <div class="btn-group">
+        {% if role == 'PROCUREMENT_OFFICER' or role == 'ADMIN' %}
+            <a href="{% url 'create_rfq' %}" class="btn">Create New RFQ Form</a>
+            <a href="{% url 'register_vendor' %}" class="btn">Register External Vendor</a>
+        {% elif role == 'VENDOR' %}
+            <a href="{% url 'rfq_list' %}" class="btn">Browse Open Invitations</a>
+        {% elif role == 'MANAGER' %}
+            <a href="{% url 'approval_queue' %}" class="btn">View Approvals Waiting Queue</a>
+        {% endif %}
+    </div>
+</div>
         </div>
     </div>
 

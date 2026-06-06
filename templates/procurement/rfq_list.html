@@ -48,13 +48,22 @@
                 </div>
 
                 <div style="border-top: 1px solid #edf2f7; padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                    <span class="badge" style="background-color: #e0f7fa; color: #006064;">{{ rfq.get_status_display }}</span>
-                    {% if request.user.role == 'VENDOR' %}
-                        <a href="#" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Submit Proposal Bid</a>
-                    {% else %}
-                        <small style="color: #78909c;">{{ rfq.assigned_vendors.count }} Vendor(s) In Loop</small>
-                    {% endif %}
-                </div>
+    <span class="badge" style="background-color: #e0f7fa; color: #006064;">{{ rfq.get_status_display }}</span>
+    
+    {% if request.user.role == 'VENDOR' %}
+        <a href="{% url 'submit_quotation' rfq.id %}" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            Submit Proposal Bid
+        </a>
+    {% else %}
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <small style="color: #78909c;">{{ rfq.quotations.count }} Bid(s) Submitted</small>
+            
+            <a href="{% url 'compare_quotations' rfq.id %}" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; background-color: #0288d1;">
+                Compare Bids Analytics
+            </a>
+        </div>
+    {% endif %}
+</div>
             </div>
             {% empty %}
             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; color: #78909c; border-radius: 6px;">
